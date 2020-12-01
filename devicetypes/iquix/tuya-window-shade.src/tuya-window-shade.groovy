@@ -163,11 +163,11 @@ private levelEventMoving(currentLevel) {
 
 private levelEventArrived(level) {
 	state.levelRestoreValue = null
-	if (level == 0) {
+	if (level < 5) {
 		sendEvent(name: "windowShade", value: "closed", displayed: true)
-	} else if (level == 100) {
+	} else if (level > 95) {
 		sendEvent(name: "windowShade", value: "open", displayed: true)
-	} else if (level > 0 && level < 100) {
+	} else if (level >= 5 && level <= 95) {
 		sendEvent(name: "windowShade", value: "partially open", displayed: true)
 	} else {
 		log.debug "Position value error (${level}) : Please remove the device from Smartthings, and setup limit of the curtain before pairing."
@@ -181,7 +181,7 @@ private levelEventArrived(level) {
 def close() {
 	log.info "close()"
 	def currentLevel = device.currentValue("level")
-	if (currentLevel == 0) {
+	if (currentLevel < 5) {
 		sendEvent(name: "windowShade", value: "closed", displayed: true)
 	}
 	sendTuyaCommand("01", DP_TYPE_ENUM, zigbee.convertToHexString(cmdVal(2)))
@@ -190,7 +190,7 @@ def close() {
 def open() {
 	log.info "open()"
 	def currentLevel = device.currentValue("level")
-	if (currentLevel == 100) {
+	if (currentLevel > 95) {
 		sendEvent(name: "windowShade", value: "open", displayed: true)
 	}
 	sendTuyaCommand("01", DP_TYPE_ENUM, zigbee.convertToHexString(cmdVal(0)))
